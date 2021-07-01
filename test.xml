@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<conversion>
+    <workflow>
+        <module name="FalconConvert">
+            <with-param name="format" value="MARC21"/>
+            <with-param name="script" value="test_001_present_unique.fcv"/>
+            <with-param name="output" value="error_001.txt"/>
+        </module>
+        <module name="FalconConvert">
+            <with-param name="input" value="error_001.txt"/>
+            <with-param name="format" value="MARC21"/>
+            <with-param name="script" value="{$p}/check_tags.fcv"/>
+            <with-param name="output" value="error_tags.txt"/>
+        </module>        
+    </workflow>
+    <info>
+        <name>KfL Posttest</name>
+        <description/>
+        <version>Wed Oct 18 2017 15:38:53 GMT+0200 (Mitteleuropäische Sommerzeit)</version>
+        <author>KI</author>
+    </info>
+</conversion>
