@@ -3,12 +3,12 @@
     <workflow>
         <module name="FalconConvert">
             <with-param name="format" value="MARC21"/>
-            <with-param name="script" value="test_001_present_unique.fcv"/>
-            <with-param name="output" value="error_001.txt"/>
+            <with-param name="script" value="check_003.fcv"/>
+            <with-param name="output" value="tmp_1.flc"/>
         </module>
         <module name="FalconConvert">
-            <with-param name="input" value="error_001.txt"/>
-            <with-param name="format" value="MARC21"/>
+            <with-param name="input" value="tmp_1.flc"/>
+            <with-param name="format" value="UNIMARC_TAGGED"/>
             <with-param name="script" value="{$p}/check_tags.fcv"/>
             <with-param name="output" value="error_tags.txt"/>
         </module>        
