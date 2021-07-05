@@ -11,7 +11,7 @@
             <with-param name="format" value="UNIMARC_TAGGED"/>
             <with-param name="script" value="{$p}/check_tags.fcv"/>
             <with-param name="output" value="error_tags.txt"/>
-        </module>        
+        </module>
     </workflow>
     <info>
         <name>KfL Posttest</name>

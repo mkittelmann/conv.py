@@ -18,6 +18,7 @@
 # # use Conv::Logfile;
 import argparse, sys, os, logging, multiprocessing
 import xmltodict
+import xml.etree.ElementTree as ET
 from functools import partial
 from pathlib import Path
 from pprint import pprint
@@ -92,7 +93,8 @@ if __name__ == "__main__":
     ## instructions xml
     xml_as_string = Path('test.xml').read_text() ## TODO xmltodict erkennt keine Kommentare
     xml_as_dict = xmltodict.parse(xml_as_string, dict_constructor=dict)
-    wf = xml_as_dict['conversion']['workflow']['module']                
+    wf = xml_as_dict['conversion']['workflow']['module']    
+    
     ## execute workflow on each path in pathlist    
     pathlist = Path(data_dir_in_str).rglob('*.*')                
     run_workflow_partial = partial(run_workflow, workflow=wf, param=param_dir_in_str, work=work_dir_in_str)       
