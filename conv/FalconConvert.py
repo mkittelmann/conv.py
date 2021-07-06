@@ -1,3 +1,4 @@
+import conv.Config as config
 from datetime import datetime
 from pprint import pprint
 import subprocess, re, os, sys
@@ -7,82 +8,46 @@ from shutil import copyfile
 # from pathlib import Path
 # from pprint import pprint
 
-def run( file, step, ix, param, work):
-    pprint(step)      
-    file = '.\\' + file    ## schon expandiert wg. rglob pathlist
-    input_list = [ p for p in step['with-param'] if p['@name'] == 'input' ]
-    if len(input_list) != 0:
-        input = input_list[0].get( '@value', file ) 
-        input_file_in_work_dir = work + '\\' + input
-    else:  ## file not given in params
-        input = file
-        if file == os.path.basename( file ):
-            work + '\\' + input            
-        input_file_in_work_dir = input.replace('.\data', '.\work')    ## TODO variables
-        copyfile(input, input_file_in_work_dir)   
-    
-    format_list = [ p for p in step['with-param'] if p['@name'] == 'format' ]
-    if len(format_list) != 0:
-        format = format_list[0].get( '@value', 0 ) 
-    else:
-        print( 'Missing mandatory argument #format# in step ', str(ix) )
-        sys.exit()        
-    
-    script_list = [ p for p in step['with-param'] if p['@name'] == 'script' ]
-    if len(script_list) != 0:
-        script = script_list[0].get( '@value', 0 ) 
-    else:
-        print( 'Missing mandatory argument #script# in step ', str(ix) )
-        sys.exit()
-    
-    output_list = [ p for p in step['with-param'] if p['@name'] == 'output' ]
-    if len(output_list) != 0:
-        output = output_list[0].get( '@value', 0 )
-        if output == os.path.basename( output ):
-            output = work + '\\' + output
-    else:
-        print( 'Missing mandatory argument #output# in step ', str(ix) )
-        sys.exit()        
-    ## path expansions 
-    switch = {
+def run( file, step, ix, param, work, data):        
+    falcon_path = config.getFalconPath()
+    query = '^\{\$([wpft])\}[\/\\\\](.+)$'    ## matcht nur Pfadvariablen
+    pattern = re.compile(r"{}".format(query), re.IGNORECASE)              
+    pprint( step )        
+    ## variable expansions 
+    expansion = {
       'p' : param, 
       'w' : work,
-      'f' : file, 
-      't' : datetime.now().timestamp()
+      'f' : os.path.basename(file), 
+      't' : str(datetime.now().timestamp())
     } 
-    ## TODO: Was ist denn, wenn mehrere matchen und ersetzt werden müssen?    
-    query = '\{\$([wpft])\}[\/\\\\](.+)$'
-    pattern = re.compile(r"{}".format(query), re.IGNORECASE)   
-    m = pattern.search( input )    
-    if m:
-        input = switch[ m.group(1).strip() ] + '\\' + m.group(2).strip()  
-        
-    m = pattern.search( script )
-    if m:
-        script = switch[ m.group(1).strip() ] + '\\' + m.group(2).strip() 
-    else:
-        script = param + '\\' + script     
-
-    print(script)
-        
-
-    m = pattern.search( output )    
-    if m:
-        input = switch[ m.group(1).strip() ] + '\\' + m.group(2).strip()       
-
-    print(output)        
+    prms = {}   
+    for p in ['input', 'script', 'format', 'output']:      
+        prms[p] = [ e for e in step['with-param'] if e['@name'] == p ]
+        prms[p] = next(iter(prms[p]), {})                           ## https://stackoverflow.com/a/23003811/4237436
+        default = file if p == 'input' else ''
+        prms[p] = prms[p].get( '@value', default )  
+        if prms[p] == '':
+            print( 'Missing mandatory argument ', p, ' in step ', str(ix) )
+            sys.exit()                            
+        if prms[p] == file:
+            prms[p] = os.path.join(work, os.path.basename(prms[p]))  ## file schon expandiert wg. rglob pathlist       
+            if not os.path.isfile(os.path.abspath(prms[p])):         ## copy unless exists
+                copyfile( file, os.path.abspath(prms[p]))               
+    for p in ['input', 'script', 'output']:       
+        match = pattern.search( prms[p] )    
+        if match:            
+            prms[p] = os.path.join( expansion[ match.group(1) ], os.path.basename( prms[p] ))        
+        else:
+            prms[p] = os.path.join( work, prms[p])
+        prms[p] = prms[p].replace( '{$t}', expansion['t'] )
+        prms[p] = prms[p].replace( '{$f}', expansion['f'] )
+    print(prms)
     
-    ## run sys process
-    input_file_in_work_dir = os.path.abspath( input_file_in_work_dir )
-    script = os.path.abspath( script )
-    output = os.path.abspath( output )
-    script = os.path.abspath( script )  
-    command = f"\"C:\PortablePrograms\Falcon\Falcon.exe\" -d {input_file_in_work_dir} -f {format} -e {script}/{output} -x1 -h1"
+    command = f"\"{falcon_path}\" -d {prms['input']} -f {prms['format']} -e {prms['script']}/{prms['output']} -x1 -h1"
     try:
       completed_process = subprocess.run( command )   
       print(completed_process.returncode)      
       return completed_process.returncode    
-    except Error:
+    except IOError:
       return 1  
-    return 1
-    
+    return 1    

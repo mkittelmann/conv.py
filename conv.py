@@ -14,44 +14,41 @@
 
 ##TODO
 # # use Conv::Instructions;
-# # use Conv::Config;
+import conv.Config;
 # # use Conv::Logfile;
 import argparse, sys, os, logging, multiprocessing
 import xmltodict
-import xml.etree.ElementTree as ET
 from functools import partial
 from pathlib import Path
 from pprint import pprint
 from datetime import datetime
-# from shutil import copyfile
-## application specfic modules
+## application specific modules
 import conv.FalconConvert 
 import conv.FalconIndex 
-import conv.FcvTemplate
-import conv.Copy 
-import conv.System
-import conv.SysMerge
+# import conv.FcvTemplate
+# import conv.Copy 
+# import conv.System
+# import conv.SysMerge
 
 ########################################################################
 ###                          functions                               ###
 ########################################################################
 
-def run_workflow(path, workflow, param, work):
+def run_workflow(path, workflow, param, work, data):
     if os.path.isfile( path ):
-        file = str(path)  ### because path is object not string        
+        file = os.path.abspath(path)  ### str() path is object not string        
         for ix, step in enumerate(workflow):
-            return_code = run_module( file, step, ix, param, work )
+            return_code = run_module( file, step, str(ix), param, work, data )
             # pprint( return_code )
             if return_code == 0:
                 continue
             else:
                 print( 'Step not processed orderly.' ) #TODO error message
-                return Error
         
-def run_module( file, step, ix, param, work):
+def run_module( file, step, ix, param, work, data):
     module = step['@name']
     ## run respective module
-    return eval( 'conv.' + module + '.run( file, step, ix, param, work)' )   
+    return eval( 'conv.' + module + '.run( file, step, ix, param, work, data)' )   
 
 ########################################################################
 ###                           main                                   ###
@@ -97,7 +94,7 @@ if __name__ == "__main__":
     
     ## execute workflow on each path in pathlist    
     pathlist = Path(data_dir_in_str).rglob('*.*')                
-    run_workflow_partial = partial(run_workflow, workflow=wf, param=param_dir_in_str, work=work_dir_in_str)       
+    run_workflow_partial = partial(run_workflow, workflow=wf, param=os.path.abspath(param_dir_in_str), work=os.path.abspath(work_dir_in_str), data=os.path.abspath(data_dir_in_str))       
     with multiprocessing.Pool() as pool:
         results = pool.map(run_workflow_partial, pathlist) 
         results = [x for x in results if x is not None ]

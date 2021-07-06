@@ -3,15 +3,29 @@
     <workflow>
         <module name="FalconConvert">
             <with-param name="format" value="MARC21"/>
-            <with-param name="script" value="check_003.fcv"/>
-            <with-param name="output" value="tmp_1.flc"/>
+            <with-param name="script" value="{$p}/check_003.fcv"/>
+            <with-param name="output" value="{$f}tmp_1.flc"/>
         </module>
         <module name="FalconConvert">
-            <with-param name="input" value="tmp_1.flc"/>
+            <with-param name="input" value="{$f}tmp_1.flc"/>
             <with-param name="format" value="UNIMARC_TAGGED"/>
             <with-param name="script" value="{$p}/check_tags.fcv"/>
-            <with-param name="output" value="error_tags.txt"/>
+            <with-param name="output" value="error_tags_{$f}_{$t}.txt"/>
         </module>
+        <module name="FalconIndex">        
+            <with-param name="input" value="{$f}tmp_1.flc"/>
+            <with-param name="script" value="{$p}/001.ipa"/>
+            <with-param name="format" value="UNIMARC_TAGGED"/>
+            <with-param name="name" value="001"/>
+            <with-param name="die_if_empty" value="true"/>
+        </module> 
+        <module name="FalconIndex">        
+            <with-param name="script" value="{$p}/001.ipa"/>
+            <with-param name="format" value="MARC21"/>
+            <with-param name="name" value="001"/>
+            <with-param name="die_if_empty" value="true"/>
+        </module> 
+
     </workflow>
     <info>
         <name>KfL Posttest</name>
