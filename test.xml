@@ -25,7 +25,10 @@
             <with-param name="name" value="001"/>
             <with-param name="die_if_empty" value="true"/>
         </module> 
-
+        <module name="Copy">
+            <with-param name="source" value="{$f}"/>
+            <with-param name="target" value="{$f}_copied"/>
+        </module>
     </workflow>
     <info>
         <name>KfL Posttest</name>
