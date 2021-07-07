@@ -25,7 +25,7 @@ from datetime import datetime
 ## application specific modules
 import conv.FalconConvert 
 import conv.FalconIndex 
-# import conv.FcvTemplate
+import conv.FcvTemplate
 import conv.Copy 
 # import conv.System
 # import conv.SysMerge
@@ -43,7 +43,7 @@ def run_workflow(path, workflow, param, work, data):
             if return_code == 0:
                 continue
             else:
-                print( 'Step not processed orderly.' ) #TODO error message
+                print( 'Step not processed orderly.' + "\n\n\n\n") #TODO error message
         
 def run_module( file, step, ix, param, work, data):
     module = step['@name']

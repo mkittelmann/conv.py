@@ -11,8 +11,7 @@ from shutil import copyfile
 
 def run( file, step, ix, param, work, data):        
     falcon_path = config.getFalconPath()
-    query = '^\{\$([wpft])\}[\/\\\\](.+)$'    ## matcht nur Pfadvariablen
-    pattern = re.compile(r"{}".format(query), re.IGNORECASE)                  
+    pattern = pattern = config.getPattern()
     expansion = {
       'p' : param, 
       'w' : work,
