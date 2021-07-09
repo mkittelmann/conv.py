@@ -40,8 +40,7 @@ def run( file, step, ix, param, work, data):
             prms[p] = os.path.join( work, prms[p])
         prms[p] = prms[p].replace( '{$t}', expansion['t'] )
         prms[p] = prms[p].replace( '{$f}', expansion['f'] )
-    print(prms)
-    
+    # print(prms)    
     command = f"\"{falcon_path}\" -d {prms['input']} -f {prms['format']} -e {prms['script']}/{prms['output']} -x1 -h1"
     try:
       completed_process = subprocess.run( command )   

@@ -52,17 +52,6 @@ def run( file, step, ix, param, work, data):
         with open(target, 'w') as f:
             txt = txt.replace( f'[% {name} %]', prms[name] )
             f.write( txt )   
-            
-    # prms['path_to_file'] = prms['path_to_file'].replace( '{$ww}', work + '\\'  ) 
-    
-    # print(target)
-    # txt = ''
-    # with open(target, 'r') as f:
-        # txt = f.read()
-    # with open(target, 'w') as f:
-        # txt = txt.replace( '[% path_to_file %]', prms['path_to_file'] )
-        # txt = txt.replace( '[% format_of_file %]', prms['format_of_file'] )
-        # f.write( txt )
     return 1
     
     

@@ -13,7 +13,6 @@
 ## python conv.py -q .\data -p .\param -w .\work -i test.xml
 
 ##TODO
-# # use Conv::Instructions;
 import conv.Config;
 # # use Conv::Logfile;
 import argparse, sys, os, logging, multiprocessing
@@ -27,6 +26,8 @@ import conv.FalconConvert
 import conv.FalconIndex 
 import conv.FcvTemplate
 import conv.Copy 
+import conv.BaseX
+import conv.BaseX_Import
 # import conv.System
 # import conv.SysMerge
 
@@ -87,8 +88,9 @@ if __name__ == "__main__":
     param_dir_in_str=args.param or args.p
     data_dir_in_str=args.queue or args.q    
     instr_as_str=args.instructions or args.i      
+    print(instr_as_str)
     ## instructions xml
-    xml_as_string = Path('test.xml').read_text() ## TODO xmltodict erkennt keine Kommentare
+    xml_as_string = Path(instr_as_str).read_text() ## TODO xmltodict erkennt keine Kommentare
     xml_as_dict = xmltodict.parse(xml_as_string, dict_constructor=dict)
     wf = xml_as_dict['conversion']['workflow']['module']    
     
