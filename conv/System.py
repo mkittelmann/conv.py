@@ -21,7 +21,7 @@ def run( file, step, ix, param, work, data):
         elif isinstance( step['with-param'], dict):
             prms[p] = step['with-param'] if step['with-param']['@name'] == p else {}        
         prms[p] = prms[p].get( '@value', '' )  
-        prms[p] = prms[p].replace( '{$f}', expansion['f'] )
+        prms[p] = prms[p].replace( '{$p}', expansion['p'] )
         prms[p] = prms[p].replace( '{$w}', expansion['w'] )    
         prms[p] = prms[p].replace( '{$t}', expansion['t'] )
         prms[p] = prms[p].replace( '{$f}', expansion['f'] )            
