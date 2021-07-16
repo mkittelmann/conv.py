@@ -37,17 +37,18 @@ import conv.BaseX_Import
 def run_workflow(path, workflow, param, work, data):
     if os.path.isfile( path ):
         file = os.path.abspath(path)  ### str() path is object not string          
-        logger.info(f"Workflow with {str(len(workflow))} steps ready for processing.")                        
+        logger.info(f"Workflow with {str(len(workflow))} step{'s' if len(workflow) > 1 else ''} ready for processing.")                        
         for ix, step in enumerate(workflow):
-            return_code = run_module( file, step, str(ix), param, work, data )
+            return_code = run_module( file, step, str(ix), param, work, data )          
             if return_code == 1:
+                logger.info(f"Step {str(ix + 1)} {step['@name']} completed successfully.")                
                 continue
             else:
                 logger.error(f"Step {str(ix + 1)} {step['@name']} not completed.")                
         
 def run_module( file, step, ix, param, work, data):
     module = step['@name']
-    return eval( 'conv.' + module + '.run( file, step, ix, param, work, data)' )       ## run respective module
+    return eval( 'conv.' + module + '.run( file, step, ix, param, work, data)' )       ## run respective module    
 
 ########################################################################
 ###                           main                                   ###
@@ -97,7 +98,7 @@ if __name__ == "__main__":
         logger.error( f"I/O error reading XML instructions.\n{err.strerror}" )
         sys.exit()
     except:
-        logger.error( "Unexpected error reading XML instructions.\n", sys.exc_info()[0] )
+        logger.error( f"Unexpected error reading XML instructions.\n{ sys.exc_info()[0] }")
         sys.exit()
     try:
         xml_as_dict = xmltodict.parse(xml_as_string, dict_constructor=dict)

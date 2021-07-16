@@ -33,10 +33,8 @@ def run( file, step, ix, param, work, data):
     command = f"\"{processor_path}\" -c\"check {prms['db']}\" -c\"run {prms['xq']}\" > \"{prms['output']}\""  
     try:
       completed_process = subprocess.run( command )   
-      # print(completed_process.returncode)      
-      return completed_process.returncode    
-    except IOError:
-      return 1  
+    except:
+      return 0
     return 1      
     
 # db 	verpflichtend 		Name der BaseX-Datenbank. Wenn die DB nicht existiert, wird sie erzeugt. Die Datenbank darf nicht anderweitig in BaseX geöffnet sein (z.B. im GUI).

@@ -44,12 +44,9 @@ def run( file, step, ix, param, work, data):
     parser = ifIsCsv if isCSV else '' 
     command = f"\"{processor_path}\" -c\"check {prms['db']}\" {parser} -c\"add {prms['input']}\" "        
     try:
-      completed_process = subprocess.run( command )     
-      return completed_process.returncode    
-    except: 
-        logger.error(f"Step {str(ix + 1)} {step['@name']} not completed successfully.\n{sys.exc_info()[0]}")
-        # sys.exit()        
-        return 0      
-    logger.info(f"Step {str(ix + 1)} {step['@name']} successfully completed.")     
+      completed_process = subprocess.run( command )    
+      # return completed_process.returncode   
+    except:    
+        return 0           
     return 1           
         
