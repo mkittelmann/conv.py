@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <conversion>
     <workflow>   
-       <!-- <module name="BaseX_Import"> -->
-            <!-- <with-param name="db" value="test-import"/> -->
-            <!-- <with-param name="input" value="data_xml"/> -->
-        <!-- </module>    -->
-       <!-- <module name="BaseX"> -->
-            <!-- <with-param name="db" value="test-import"/> -->
-            <!-- <with-param name="xq" value="{$p}/sru_xslt.xq"/> -->
-            <!-- <with-param name="output" value="tmp"/> -->
-        <!-- </module>            -->
        <module name="BaseX_Import">
-            <with-param name="db" value="{$f}_test-import2"/>     
-        </module>         
+            <with-param name="db" value="test-import"/>
+            <with-param name="input" value="data_xml"/>
+        </module>   
+       <module name="BaseX">
+            <with-param name="db" value="test-import"/>
+            <with-param name="xq" value="{$p}/sru_xslt.xq"/>
+            <with-param name="output" value="tmp"/>
+        </module>           
+       <!-- <module name="BaseX_Import"> -->
+            <!-- <with-param name="db" value="{$f}_test-import2"/>      -->
+        <!-- </module>          -->
     </workflow>
 </conversion>

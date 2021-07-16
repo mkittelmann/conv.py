@@ -36,22 +36,26 @@ def run( file, step, ix, param, work, data):
     prms['path'] = prms['path'].replace( '{$p}', expansion['p'] )
     source = os.path.join( prms['path'], prms['script'] + '.tmpl' )
     target = os.path.join( work, prms['script'] + '.fcv' )
-    copyfile( source, target)   
     
-    for prm in [ e for e in step['with-param'] if e['@name'] not in ['script', 'path'] ]:        
-        print(prm)
-        name = prm.get( '@name', '' ) 
-        value = prm.get( '@value', '' ) 
-        match = pattern.search( value )                              ## falls p für path to file verwendet wird
-        if match:            
-            prms[name] = os.path.join( expansion[ match.group(1) ], os.path.basename( value ))               
-        prms[name] = value.replace( '{$ww}', work + '\\'  )     
-        txt = ''
-        with open(target, 'r') as f:
-            txt = f.read()
-        with open(target, 'w') as f:
-            txt = txt.replace( f'[% {name} %]', prms[name] )
-            f.write( txt )   
+    try: 
+        copyfile( source, target)   
+        
+        for prm in [ e for e in step['with-param'] if e['@name'] not in ['script', 'path'] ]:        
+            print(prm)
+            name = prm.get( '@name', '' ) 
+            value = prm.get( '@value', '' ) 
+            match = pattern.search( value )                              ## falls p für path to file verwendet wird
+            if match:            
+                prms[name] = os.path.join( expansion[ match.group(1) ], os.path.basename( value ))               
+            prms[name] = value.replace( '{$ww}', work + '\\'  )     
+            txt = ''
+            with open(target, 'r') as f:
+                txt = f.read()
+            with open(target, 'w') as f:
+                txt = txt.replace( f'[% {name} %]', prms[name] )
+                f.write( txt )   
+    except: 
+        return 0
     return 1
     
     

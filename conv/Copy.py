@@ -40,4 +40,8 @@ def run( file, step, ix, param, work, data):
             prms[p] = os.path.join( work, prms[p])
         prms[p] = prms[p].replace( '{$t}', expansion['t'] )
         prms[p] = prms[p].replace( '{$f}', expansion['f'] )    
-    copyfile( prms['source'], prms['target'])    
+    try:
+        copyfile( prms['source'], prms['target'])    
+    except: 
+        return 0
+    return 1

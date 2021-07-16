@@ -11,7 +11,7 @@ from shutil import copyfile
 
 def run( file, step, ix, param, work, data):        
     falcon_path = config.getFalconPath()
-    pattern = pattern = config.getPattern()
+    pattern = config.getPattern()
     expansion = {
       'p' : param, 
       'w' : work,
@@ -24,8 +24,6 @@ def run( file, step, ix, param, work, data):
         prms[p] = next(iter(prms[p]), {})                           ## https://stackoverflow.com/a/23003811/4237436
         default = file if p == 'input' else ''
         prms[p] = prms[p].get( '@value', default )  
-        pprint( step )        
-        pprint(prms)
         if p == 'die_if_empty':
             '' ##TODO
         elif prms[p] == '':
@@ -46,9 +44,8 @@ def run( file, step, ix, param, work, data):
     
     command = f"\"{falcon_path}\" -d {prms['input']} -f {prms['format']} -r {prms['name']}/{prms['script']} -x1 -h1"
     try:
-      completed_process = subprocess.run( command )   
-      print(completed_process.returncode)      
-      return completed_process.returncode    
-    except IOError:
-      return 1  
+        completed_process = subprocess.run( command )   
+      # print(completed_process.returncode)        
+    except:
+        return 0
     return 1    
