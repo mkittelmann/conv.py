@@ -44,7 +44,7 @@ def run( file, step, ix, param, work, data):
     command = f"\"{falcon_path}\" -d {prms['input']} -f {prms['format']} -e {prms['script']}/{prms['output']} -x1 -h1"
     try:
       completed_process = subprocess.run( command )   
-      print(completed_process.returncode)      
+      # print(completed_process.returncode)      
       return completed_process.returncode    
     except IOError:
       return 1  

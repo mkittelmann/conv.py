@@ -28,13 +28,12 @@ def run( file, step, ix, param, work, data):
             prms[p] = os.path.join( work, os.path.basename( prms[p] ))  
         prms[p] = prms[p].replace( '{$t}', expansion['t'] )
         prms[p] = prms[p].replace( '{$f}', expansion['f'] ) 
-    pprint(prms)
     ## prms['processor'] if prms['processor'] != '' else 
     processor_path = os.path.abspath( config.getBaseXProcessor() )
     command = f"\"{processor_path}\" -c\"check {prms['db']}\" -c\"run {prms['xq']}\" > \"{prms['output']}\""  
     try:
       completed_process = subprocess.run( command )   
-      print(completed_process.returncode)      
+      # print(completed_process.returncode)      
       return completed_process.returncode    
     except IOError:
       return 1  
