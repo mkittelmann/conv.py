@@ -1,0 +1,50 @@
+
+
+
+
+
+
+
+            <!-- <module name="Copy"> -->
+            <!-- <note>There is a bug in Falcon that prevents it from loading record from the same file if the programm is called from another directory.  -->
+                <!-- Hence a copy of the file is made and indexed.</note> -->
+            <!-- <with-param name="source" value="{$f}"/> -->
+            <!-- <with-param name="target" value="{$w}copy.mrc"/> -->
+        <!-- </module> -->
+        <!-- <module name="FalconIndex"> -->
+            <!-- <note>Index the record IDs</note> -->
+            <!-- <with-param name="input" value="copy.mrc"/> -->
+            <!-- <with-param name="script" value="{$p}/001.ipa"/> -->
+            <!-- <with-param name="format" value="MARC21"/> -->
+            <!-- <with-param name="name" value="001"/> -->
+            <!-- <with-param name="die_if_empty" value="true"/> -->
+        <!-- </module> -->
+
+                
+        <!-- <module name="System"> -->
+            <!-- <note>Check UTF-8.</note> -->
+            <!-- <with-param name="command" value="perl {$p}/stat_utf8_v2.pl {$f} -i"/> -->
+        <!-- </module> -->
+
+   
+        <!-- <module name="SysMerge"> -->
+            <!-- <note>Merge all result documents</note> -->
+            <!-- <with-param-list name="source"> -->
+                <!-- <param value="error_tags.txt"/> -->
+                <!-- <param value="error_001.txt"/> -->
+                <!-- <param value="{$f}_utf8stat.log"/> -->
+                <!-- <param value="error_003.txt"/> -->
+                <!-- <param value="error_016_zdb_id.txt"/> -->
+                <!-- <param value="error_084_fid.txt"/> -->
+                <!-- <param value="error_245.txt"/> -->
+                <!-- <param value="error_856_proxy_link.txt"/> -->
+                <!-- <param value="error_856_link_to_Inhaltsdaten.txt"/> -->
+                <!-- <param value="error_856_link_to_publisher.txt"/> -->
+                <!-- <param value="error_912_Paketsigel.txt"/> -->
+                <!-- <param value="error_929_Vertrags-ID.txt"/> -->
+                <!-- <param value="error_773_Zeitschriftentitel_leer.txt"/> -->
+                <!-- <param value="error_Vertrags-ID_part_of_filename.txt"/>                 -->
+                <!-- <param value="mrc_delete_empty.log"/>                 -->
+            <!-- </with-param-list> -->
+            <!-- <with-param name="target" value="{$f}_posttest.out.txt"/> -->
+        <!-- </module> -->
