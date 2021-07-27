@@ -37,14 +37,14 @@ import conv.System
 def run_workflow(path, workflow, param, work, data):
     if os.path.isfile( path ):
         file = os.path.abspath(path)  ### str() path is object not string          
-        logger.info(f"Workflow with {str(len(workflow))} step{'s' if len(workflow) > 1 else ''} ready for processing.")                        
+        logger.info(f"Workflow with {str(len(workflow))} step{'s' if len(workflow) > 1 else ''} ready for processing of {file}.")                        
         for ix, step in enumerate(workflow):
             return_code = run_module( file, step, str(ix), param, work, data )          
             if return_code == 1:
-                logger.info(f"Step {str(ix + 1)} {step['@name']} completed successfully.")                
+                logger.info(f"Step {str(ix + 1)} {step['@name']} completed successfully for {file}.")                
                 continue
             else:
-                logger.error(f"Step {str(ix + 1)} {step['@name']} not completed.")                
+                logger.error(f"Step {str(ix + 1)} {step['@name']} not completed for {file}.")                
         
 def run_module( file, step, ix, param, work, data):
     module = step['@name']
