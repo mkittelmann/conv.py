@@ -57,9 +57,9 @@ if __name__ == "__main__":
     start = datetime.now().replace(microsecond=0)       
     parser=argparse.ArgumentParser()
     parser.add_argument('-q', '-queue', help='', dest='inputdir')    ## https://stackoverflow.com/questions/28638813/how-to-make-a-short-and-long-version-of-a-required-argument-using-python-argpars            
-    parser.add_argument('-w', '-work', help='', dest='workdir')   
+    parser.add_argument('-w', '-work', help='', dest='workdir', required=True)   
     parser.add_argument('-p', '-param', help='', dest='paramdir')   
-    parser.add_argument('-i', '-instructions', help='', dest='xmlfile')   
+    parser.add_argument('-i', '-instructions', help='', dest='xmlfile', required=True)   
     parser.add_argument('-b', '-begin', help='', dest='begin')
     parser.add_argument('-e', '-end', help='', dest='end')
     parser.add_argument('-d', '-die', help='', dest='die')
@@ -71,11 +71,7 @@ if __name__ == "__main__":
     except:
         print( "Unable to source log file\n", sys.exc_info()[0] )
     logger.info('Converter process started.')
-    ## dirs
-    # work_dir_in_str=args.work or args.w
-    # param_dir_in_str=args.param or args.p    
-    # data_dir_in_str=args.queue or args.q     
-    # instr_as_str=args.instructions or args.i          
+    ## dirs      
     work_dir_in_str=args.workdir
     param_dir_in_str=args.paramdir   
     data_dir_in_str=args.inputdir  
