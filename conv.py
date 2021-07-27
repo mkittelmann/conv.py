@@ -56,29 +56,15 @@ def run_module( file, step, ix, param, work, data):
 if __name__ == "__main__":
     start = datetime.now().replace(microsecond=0)       
     parser=argparse.ArgumentParser()
-    # group = parser.add_mutually_exclusive_group(required=True)
-    # group.add_argument('--foo',action=.....)
-    # group.add_argument('--bar',action=.....)    
-    parser.add_argument('-queue', help='')
-    parser.add_argument('-q', help='')
-    parser.add_argument('-work', help='' )
-    parser.add_argument('-w', help='')
-    parser.add_argument('-param', help='')
-    parser.add_argument('-p', help='')
-    parser.add_argument('-instructions', help='')
-    parser.add_argument('-i', help='')
-    parser.add_argument('-begin', help='')
-    parser.add_argument('-b', help='')
-    parser.add_argument('-end', help='')
-    parser.add_argument('-e', help='')
-    parser.add_argument('-die', help='')
-    parser.add_argument('-d', help='')
-    parser.add_argument('-verbose', help='')
-    parser.add_argument('-v', help='')
-    parser.add_argument('-step', help='')
-    parser.add_argument('-s', help='')
-    parser.add_argument('-library', help='', default='$Conv::Config::MODULE_LIBRARY')  ## TODO
-    parser.add_argument('-l', help='')
+    parser.add_argument('-q', '-queue', help='', dest='inputdir')    ## https://stackoverflow.com/questions/28638813/how-to-make-a-short-and-long-version-of-a-required-argument-using-python-argpars            
+    parser.add_argument('-w', '-work', help='', dest='workdir')   
+    parser.add_argument('-p', '-param', help='', dest='paramdir')   
+    parser.add_argument('-i', '-instructions', help='', dest='xmlfile')   
+    parser.add_argument('-b', '-begin', help='', dest='begin')
+    parser.add_argument('-e', '-end', help='', dest='end')
+    parser.add_argument('-d', '-die', help='', dest='die')
+    parser.add_argument('-v', '-verbose', help='', dest='verbose')
+    parser.add_argument('-l', '-library', help='', default='$Conv::Config::MODULE_LIBRARY', dest='lib')  ## TODO
     args=parser.parse_args()  
     try:
         logzero.logfile(".\conv.log")                        
@@ -86,10 +72,14 @@ if __name__ == "__main__":
         print( "Unable to source log file\n", sys.exc_info()[0] )
     logger.info('Converter process started.')
     ## dirs
-    work_dir_in_str=args.work or args.w
-    param_dir_in_str=args.param or args.p
-    data_dir_in_str=args.queue or args.q    
-    instr_as_str=args.instructions or args.i      
+    # work_dir_in_str=args.work or args.w
+    # param_dir_in_str=args.param or args.p    
+    # data_dir_in_str=args.queue or args.q     
+    # instr_as_str=args.instructions or args.i          
+    work_dir_in_str=args.workdir
+    param_dir_in_str=args.paramdir   
+    data_dir_in_str=args.inputdir  
+    instr_as_str=args.xmlfile      
     logger.info('Preparing to perform workflow: ' + instr_as_str)
     ## instructions xml
     try:
