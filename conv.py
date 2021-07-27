@@ -59,9 +59,9 @@ if __name__ == "__main__":
     parser.add_argument('-q', '-queue', help='', dest='inputdir')    ## https://stackoverflow.com/questions/28638813/how-to-make-a-short-and-long-version-of-a-required-argument-using-python-argpars            
     parser.add_argument('-w', '-work', help='', dest='workdir', required=True)   
     parser.add_argument('-p', '-param', help='', dest='paramdir')   
-    parser.add_argument('-i', '-instructions', help='', dest='xmlfile', required=True)   
-    parser.add_argument('-b', '-begin', help='', dest='begin')
-    parser.add_argument('-e', '-end', help='', dest='end')
+    parser.add_argument('-i', '-instructions', help='', dest='xmlfile', required=True )   
+    parser.add_argument('-b', '-begin', help='Step from which to start (not 0-based)', dest='begin')
+    parser.add_argument('-e', '-end', help='Number of steps to perform', dest='end')
     parser.add_argument('-d', '-die', help='', dest='die')
     parser.add_argument('-v', '-verbose', help='', dest='verbose')
     parser.add_argument('-l', '-library', help='', default='$Conv::Config::MODULE_LIBRARY', dest='lib')  ## TODO
@@ -99,7 +99,14 @@ if __name__ == "__main__":
             wf = [ wf ]        
     except:
         logger.error( f"Unexpected error accessing XML instruction modules. Invalid XML.\n{sys.exc_info()[0]}" )    
-        sys.exit()                  
+        sys.exit()    
+    
+    ## begin / end  ## nicht 0-basiert
+    b = int(args.begin) -1 if args.begin else 0
+    e = b + int(args.end) if args.end else len(wf) - b
+    ## apply begin / end 
+    wf = wf[b:e]
+        
     ## execute workflow on each path in pathlist    
     pathlist = Path(data_dir_in_str).rglob('*.*')                
     run_workflow_partial = partial(run_workflow, workflow=wf, param=os.path.abspath(param_dir_in_str), work=os.path.abspath(work_dir_in_str), data=os.path.abspath(data_dir_in_str))       
