@@ -4,9 +4,11 @@ import conv.Config as config
 from pprint import pprint
 import subprocess, re, os, sys
 from shutil import copyfile
+from logzero import logger  
 
 def run( file, step, ix, param, work, data):            
     pattern = config.getPattern()
+    logger.debug( f"Module {sys.modules[__name__]} received step-parameters {step}" )                
     expansion = {
       'p' : param, 
       'w' : work,
@@ -31,9 +33,11 @@ def run( file, step, ix, param, work, data):
     ## prms['processor'] if prms['processor'] != '' else 
     processor_path = os.path.abspath( config.getBaseXProcessor() )
     command = f"\"{processor_path}\" -c\"check {prms['db']}\" -c\"run {prms['xq']}\" > \"{prms['output']}\""  
+    logger.debug(f"Module {sys.modules[__name__]} executes command: {command}" )    
     try:
       completed_process = subprocess.run( command )   
     except:
+      logger.error(f"Module {sys.modules[__name__]} command did not complete: {command}" )    
       return 0
     return 1      
     

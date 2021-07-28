@@ -3,6 +3,7 @@ from datetime import datetime
 from pprint import pprint
 import subprocess, re, os, sys
 from shutil import copyfile
+from logzero import logger  
 # import collections
 # import sys, os, logging, multiprocessing
 # from pathlib import Path
@@ -10,8 +11,8 @@ from shutil import copyfile
 
 def run( file, step, ix, param, work, data):        
     falcon_path = config.getFalconPath()
-    pattern = config.getPattern()            
-    # pprint( step )        
+    pattern = config.getPattern()     
+    logger.debug( f"Module {sys.modules[__name__]} received step-parameters {step}" )        
     ## variable expansions 
     expansion = {
       'p' : param, 
@@ -42,8 +43,10 @@ def run( file, step, ix, param, work, data):
         prms[p] = prms[p].replace( '{$f}', expansion['f'] )
     # print(prms)    
     command = f"\"{falcon_path}\" -d {prms['input']} -f {prms['format']} -e {prms['script']}/{prms['output']} -x1 -h1"
+    logger.debug(f"Module {sys.modules[__name__]} executes command: {command}" )
     try:
         completed_process = subprocess.run( command )      
     except:
-        return 0
+        logger.error(f"Module {sys.modules[__name__]} command did not complete: {command}" )
+        return 0     
     return 1

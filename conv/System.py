@@ -1,12 +1,14 @@
 from datetime import datetime
 from pprint import pprint
-import subprocess, os
+import subprocess, os, sys
+from logzero import logger  
 # import collections
 # import sys, os, logging, multiprocessing
 # from pathlib import Path
 # from pprint import pprint
 
-def run( file, step, ix, param, work, data):     
+def run( file, step, ix, param, work, data):    
+    logger.debug( f"Module {sys.modules[__name__]} received step-parameters {step}" )       
     expansion = {
       'p' : param, 
       'w' : work,
@@ -25,7 +27,8 @@ def run( file, step, ix, param, work, data):
         prms[p] = prms[p].replace( '{$w}', expansion['w'] )    
         prms[p] = prms[p].replace( '{$t}', expansion['t'] )
         prms[p] = prms[p].replace( '{$f}', expansion['f'] )            
-              
+
+    logger.debug(f"Module {sys.modules[__name__]} executes command: {prms['command']}" )              
     try:
         completed_process = subprocess.run( prms['command'], shell=True)
     except:  

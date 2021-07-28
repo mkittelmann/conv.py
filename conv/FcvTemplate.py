@@ -3,6 +3,7 @@ from datetime import datetime
 from pprint import pprint
 import subprocess, re, os, sys
 from shutil import copyfile
+from logzero import logger  
 # import collections
 # import sys, os, logging, multiprocessing
 # from pathlib import Path
@@ -11,6 +12,7 @@ from shutil import copyfile
 def run( file, step, ix, param, work, data):        
     falcon_path = config.getFalconPath()
     pattern = config.getPattern()
+    logger.debug( f"Module {sys.modules[__name__]} received step-parameters {step}" )          
     expansion = {
       'p' : param, 
       'w' : work,
@@ -36,7 +38,7 @@ def run( file, step, ix, param, work, data):
     prms['path'] = prms['path'].replace( '{$p}', expansion['p'] )
     source = os.path.join( prms['path'], prms['script'] + '.tmpl' )
     target = os.path.join( work, prms['script'] + '.fcv' )
-    
+    logger.debug(f"Module {sys.modules[__name__]} executes command: copyfile({source}, {target})" )    
     try: 
         copyfile( source, target)   
         
@@ -54,7 +56,11 @@ def run( file, step, ix, param, work, data):
             with open(target, 'w') as f:
                 txt = txt.replace( f'[% {name} %]', prms[name] )
                 f.write( txt )   
+    except IOError as err:
+        logger.error( f"Module {sys.modules[__name__]} I/O error:\n{err.strerror}" )
+        sys.exit()
     except: 
+        logger.error(f"Module {sys.modules[__name__]} did not complete Template rewrite:\n{ sys.exc_info()[0] }" )       
         return 0
     return 1
     

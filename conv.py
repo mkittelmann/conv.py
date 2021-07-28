@@ -30,20 +30,24 @@ import conv.BaseX_Import
 import conv.System
 # import conv.SysMerge
 
-## early initialization so that -v is available for log settings
+########################################################################
+## early initialization so that -v is available for log settings      ##
+########################################################################
 parser=argparse.ArgumentParser()
-parser.add_argument('-q', '-queue', help='', dest='inputdir')    ## https://stackoverflow.com/questions/28638813/how-to-make-a-short-and-long-version-of-a-required-argument-using-python-argpars            
-parser.add_argument('-w', '-work', help='', dest='workdir', required=True)   
-parser.add_argument('-p', '-param', help='', dest='paramdir')   
-parser.add_argument('-i', '-instructions', help='', dest='xmlfile', required=True )   
-parser.add_argument('-b', '-begin', help='Step from which to start (not 0-based)', dest='begin')
-parser.add_argument('-e', '-end', help='Number of steps to perform', dest='end')
-parser.add_argument('-d', '-die', help='', dest='die', action='store_true')
-parser.add_argument('-v', '-verbose', help='', dest='verbose', action='store_true')
-parser.add_argument('-l', '-library', help='', default='$Conv::Config::MODULE_LIBRARY', dest='lib')  ## TODO
+parser.add_argument('-q', '--queue', help='', dest='inputdir')    ## https://stackoverflow.com/questions/28638813/how-to-make-a-short-and-long-version-of-a-required-argument-using-python-argpars            
+parser.add_argument('-w', '--work', help='', dest='workdir', required=True)   
+parser.add_argument('-p', '--param', help='', dest='paramdir')   
+parser.add_argument('-i', '--instructions', help='', dest='xmlfile', required=True )   
+parser.add_argument('-b', '--begin', help='Step from which to start (not 0-based)', dest='begin')
+parser.add_argument('-e', '--end', help='Number of steps to perform', dest='end')
+parser.add_argument('-d', '--die', help='', dest='die', action='store_true')
+parser.add_argument('-v', '--verbose', help='', dest='verbose', action='store_true')
+## parser.add_argument('-l', '--library', help='', default='.\conv', dest='lib')  ## deprecated
 args=parser.parse_args() 
 
-## requires initializing prior to function definition
+##########################################################################
+## requires initializing prior to function definition (global logging)  ##
+##########################################################################
 logzero.loglevel(level=logzero.INFO)  
 lf = Path(".\conv.log")
 lf.touch(exist_ok=True) 
@@ -55,8 +59,6 @@ if args.verbose:
     logzero.logfile(lf, maxBytes=1000000, backupCount=3, loglevel=logging.DEBUG)                            
     logzero.setup_logger(fileLoglevel=logzero.DEBUG)
     logzero.loglevel(logzero.DEBUG)
-    logger.debug("DEBUG logging switched on.")
-logger.debug("DEBUG logging outside of -v setting.")
 
 ########################################################################
 ###                          functions                               ###
@@ -83,7 +85,6 @@ def run_module( file, step, ix, param, work, data):
 ########################################################################
 if __name__ == "__main__":
     start = datetime.now().replace(microsecond=0)       
-
     logger.info('Converter process started.')
     ## dirs      
     work_dir_in_str=args.workdir
@@ -115,7 +116,7 @@ if __name__ == "__main__":
         logger.error( f"Unexpected error accessing XML instruction modules. Invalid XML.\n{sys.exc_info()[0]}" )    
         sys.exit()        
 
-    ## begin / end  ## begin nicht 0-basiert
+    ## prepare begin / end  (begin nicht 0-basiert)
     b = int(args.begin) -1 if args.begin else 0
     e = b + int(args.end) if args.end else len(wf) - b
     ## apply begin / end 
@@ -131,4 +132,4 @@ if __name__ == "__main__":
     ## TODO     
     # if results:        
         # results
-    logger.info('Converter process completed. Process took ' + str(datetime.now().replace(microsecond=0)-start))
+    logger.info('Converter process completed. Process took ' + str(datetime.now().replace(microsecond=0)-start) + "\n")

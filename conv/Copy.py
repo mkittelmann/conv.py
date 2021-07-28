@@ -3,6 +3,7 @@ from datetime import datetime
 from pprint import pprint
 import subprocess, re, os, sys
 from shutil import copyfile
+from logzero import logger  
 # import collections
 # import collections
 # import sys, os, logging, multiprocessing
@@ -12,6 +13,7 @@ from shutil import copyfile
 def run( file, step, ix, param, work, data):        
     falcon_path = config.getFalconPath()
     pattern = pattern = config.getPattern()
+    logger.debug( f"Module {sys.modules[__name__]} received step-parameters {step}" )          
     expansion = {
       'p' : param, 
       'w' : work,
@@ -40,8 +42,10 @@ def run( file, step, ix, param, work, data):
             prms[p] = os.path.join( work, prms[p])
         prms[p] = prms[p].replace( '{$t}', expansion['t'] )
         prms[p] = prms[p].replace( '{$f}', expansion['f'] )    
+    logger.debug(f"Module {sys.modules[__name__]} executes command: copyfile({prms['source']}, {prms['target']} )" )        
     try:
         copyfile( prms['source'], prms['target'])    
     except: 
+        logger.error(f"Module {sys.modules[__name__]} copyfile command did not complete." )    
         return 0
     return 1

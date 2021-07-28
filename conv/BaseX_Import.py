@@ -8,6 +8,7 @@ from logzero import logger
 
 def run( file, step, ix, param, work, data):            
     pattern = config.getPattern()
+    logger.debug( f"Module {sys.modules[__name__]} received step-parameters {step}" )          
     expansion = {
       'p' : param, 
       'w' : work,
@@ -42,11 +43,13 @@ def run( file, step, ix, param, work, data):
     isJSON = prms.get( 'isJSON', '' ) if prms.get( 'isJSON', None ) else False
     ifIsJSON = ' -c"set PARSER json" -c"SET CREATEFILTER *.json" -c"SET JSONPARSER encoding=utf-8,lax=false" '
     parser = ifIsCsv if isCSV else '' 
-    command = f"\"{processor_path}\" -c\"check {prms['db']}\" {parser} -c\"add {prms['input']}\" "        
+    command = f"\"{processor_path}\" -c\"check {prms['db']}\" {parser} -c\"add {prms['input']}\" "     
+    logger.debug(f"Module {sys.modules[__name__]} executes command: {command}" )    
     try:
       completed_process = subprocess.run( command )    
       # return completed_process.returncode   
-    except:    
+    except: 
+        logger.error(f"Module {sys.modules[__name__]} command did not complete: {command}" )    
         return 0           
     return 1           
         
