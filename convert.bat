@@ -7,7 +7,7 @@ REM python conv.py -q .\data_xml -p .\param -w .\work -i testbasex.xml
 
 REM python conv.py -q .\data -p .\param -w .\work -i test.xml
 
-REM python conv.py -q .\data -p .\param -w .\work -i test_nur_ein_Modul.xml
+python conv.py -q .\data -p .\param -w .\work -i test_nur_ein_Modul.xml
 
 REM python conv.py -q .\data -p .\param -w .\work -i test_nur_ein_Modul.xml -b 1 -e 1
 REM teste Fehlertoleranz
