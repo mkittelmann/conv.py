@@ -12,6 +12,9 @@
 ## call with
 ## python conv.py -q .\data -p .\param -w .\work -i test.xml
 
+########################################################################
+## general modules                                                    ##
+########################################################################
 import argparse, sys, os, logging, multiprocessing, logzero
 import xmltodict
 from functools import partial
@@ -19,16 +22,7 @@ from pathlib import Path
 from pprint import pprint
 from datetime import datetime
 from logzero import logger  
-## application specific modules
-import conv.Config
-import conv.FalconConvert 
-import conv.FalconIndex 
-import conv.FcvTemplate
-import conv.Copy 
-import conv.BaseX
-import conv.BaseX_Import
-import conv.System
-# import conv.SysMerge
+## application specific modules below after args ###
 
 ########################################################################
 ## early initialization so that -v is available for log settings      ##
@@ -42,8 +36,22 @@ parser.add_argument('-b', '--begin', help='Step from which to start (not 0-based
 parser.add_argument('-e', '--end', help='Number of steps to perform', dest='end')
 parser.add_argument('-d', '--die', help='', dest='die', action='store_true')
 parser.add_argument('-v', '--verbose', help='', dest='verbose', action='store_true')
-## parser.add_argument('-l', '--library', help='', default='.\conv', dest='lib')  ## deprecated
+parser.add_argument('-l', '--library', help='', default='.\conv', dest='lib')  
 args=parser.parse_args() 
+
+########################################################################
+## application specific modules                                       ##
+########################################################################
+sys.path.append(args.lib)    
+import Config
+import FalconConvert 
+import FalconIndex 
+import FcvTemplate
+import Copy 
+import BaseX
+import BaseX_Import
+import System
+# import SysMerge
 
 ##########################################################################
 ## requires initializing prior to function definition (global logging)  ##
@@ -78,7 +86,7 @@ def run_workflow(path, workflow, param, work, data):
         
 def run_module( file, step, ix, param, work, data):
     module = step['@name']
-    return eval( 'conv.' + module + '.run( file, step, ix, param, work, data)' )       ## run respective module    
+    return eval( module + '.run( file, step, ix, param, work, data)' )       ## run respective module    
 
 ########################################################################
 ###                           main                                   ###
@@ -90,7 +98,7 @@ if __name__ == "__main__":
     work_dir_in_str=args.workdir
     param_dir_in_str=args.paramdir   
     data_dir_in_str=args.inputdir  
-    instr_as_str=args.xmlfile      
+    instr_as_str=args.xmlfile        
     logger.info('Preparing to perform workflow: ' + instr_as_str)
     ## instructions xml
     try:
